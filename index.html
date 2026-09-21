@@ -1,394 +1,466 @@
-כן — שולח שוב את כל הקוד, להעתקה ישירה ל־GitHub:
+כן. העתק את כל הבלוק הבא והדבק אותו בקובץ index.html הריק:
 
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>פיקלבול גינתון – ניהול משחקים</title>
+<title>ניהול מפגש פיקלבול</title>
 <style>
-:root{--bg:#f4f6f8;--card:#fff;--ink:#17202a;--muted:#667085;--line:#d8dee6;--accent:#1769aa;--good:#1b7f4b;--bad:#b42318}
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --border:#d8dee6;
+  --text:#17202a;
+  --green:#198754;
+  --blue:#0d6efd;
+  --red:#dc3545;
+  --orange:#fd7e14;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
-header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:14px 16px}
-h1{font-size:21px;margin:0}
-.sub{color:var(--muted);font-size:13px;margin-top:3px}
-main{max-width:900px;margin:auto;padding:14px 12px 80px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
-h2{font-size:18px;margin:0 0 10px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,input{font:inherit}
-button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer}
-button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-button.good{background:var(--good);color:#fff;border-color:var(--good)}
-button.danger{color:var(--bad)}
-button:disabled{opacity:.45}
-input[type=text]{flex:1;min-width:180px;border:1px solid var(--line);border-radius:10px;padding:11px}
-.pill{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:#fff}
-.court-choice button.active{background:var(--accent);color:white;border-color:var(--accent)}
-.players{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-top:10px}
-.player{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px;border-radius:10px;background:#fff}
-.player .name{flex:1}
-.tiny{font-size:12px;color:var(--muted)}
-.courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
-.court{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcfd}
-.court.active{border-color:#a9c7df;background:#f7fbff}
-.team{padding:8px;border-radius:8px;background:#eef3f7;margin:6px 0}
-.queue{display:flex;gap:6px;flex-wrap:wrap}
-.queue .pill{background:#fff7e8}
-.stat{display:grid;grid-template-columns:1fr 58px 58px 58px 58px;gap:6px;padding:7px 0;border-bottom:1px solid #edf0f2}
-.stat.head{font-weight:600;color:var(--muted);font-size:12px}
-.notice{padding:9px 10px;border-radius:9px;background:#eef7ff;color:#174b72;margin-top:8px}
-.hidden{display:none}
-footer{color:var(--muted);text-align:center;font-size:12px;padding:10px}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:14px;
+}
+h1{
+  text-align:center;
+  font-size:26px;
+  margin:10px 0 18px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+h2{
+  font-size:20px;
+  margin:0 0 12px;
+}
+button{
+  border:0;
+  border-radius:10px;
+  padding:11px 14px;
+  font-size:16px;
+  cursor:pointer;
+}
+.primary{
+  background:var(--blue);
+  color:white;
+}
+.success{
+  background:var(--green);
+  color:white;
+}
+.danger{
+  background:var(--red);
+  color:white;
+}
+.secondary{
+  background:#e9ecef;
+  color:#111;
+}
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+input,select{
+  font-size:17px;
+  padding:10px;
+  border:1px solid #bbb;
+  border-radius:9px;
+  background:white;
+}
+#newPlayer{
+  flex:1;
+  min-width:180px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+.stat{
+  text-align:center;
+  background:#f1f3f5;
+  border-radius:10px;
+  padding:10px 5px;
+}
+.stat strong{
+  display:block;
+  font-size:24px;
+}
+.player{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 4px;
+  border-bottom:1px solid #eee;
+}
+.player:last-child{
+  border-bottom:0;
+}
+.player label{
+  flex:1;
+  font-size:18px;
+}
+.player input[type=checkbox]{
+  width:25px;
+  height:25px;
+}
+.delete{
+  background:none;
+  color:var(--red);
+  padding:5px 8px;
+  font-size:20px;
+}
+.court{
+  border:2px solid #ced4da;
+  border-radius:12px;
+  margin:10px 0;
+  padding:12px;
+  background:#fafafa;
+}
+.court-title{
+  font-weight:bold;
+  font-size:18px;
+  margin-bottom:8px;
+}
+.team{
+  padding:7px;
+  margin:5px 0;
+  border-radius:8px;
+  background:#e9ecef;
+}
+.waiting{
+  background:#fff3cd;
+  padding:10px;
+  border-radius:9px;
+  margin-top:10px;
+}
+.small{
+  font-size:14px;
+  color:#666;
+}
+@media(max-width:600px){
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
+  h1{
+    font-size:23px;
+  }
+  button{
+    font-size:15px;
+  }
+}
 </style>
 </head>
 <body>
-<header>
-<h1>פיקלבול גינתון</h1>
-<div class="sub">ניהול ערב משחקים ותחלופת שחקנים</div>
-</header>
-<main>
-<section class="card">
-<h2>1. מספר מגרשים</h2>
-<div class="row court-choice" id="courtChoice">
-<button data-n="1">1 מגרש</button>
-<button data-n="2" class="active">2 מגרשים</button>
-<button data-n="3">3 מגרשים</button>
+<div class="container">
+<h1>🏓 ניהול מפגש פיקלבול</h1>
+<div class="card">
+<h2>הגדרות המפגש</h2>
+<div class="controls">
+<label>
+מספר מגרשים:
+<select id="courtCount">
+<option value="1">1</option>
+<option value="2" selected>2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
+</label>
+<button class="danger" onclick="newSession()">
+מפגש חדש
+</button>
 </div>
-</section>
-<section class="card">
-<h2>2. שחקנים</h2>
-<div class="row">
-<input id="newPlayer" type="text" maxlength="30" placeholder="שם שחקן">
-<button class="primary" id="addPlayer">הוסף שחקן</button>
+<div class="stats">
+<div class="stat">
+<strong id="totalPlayers">0</strong>
+שחקנים ברשימה
 </div>
-<div class="tiny" style="margin-top:6px">
-עד 15 שחקנים. סמן מי משתתף הערב.
+<div class="stat">
+<strong id="presentPlayers">0</strong>
+הגיעו
 </div>
-<div class="players" id="playerList"></div>
-<div class="row" style="margin-top:12px">
-<button class="good" id="startEvening">התחל ערב</button>
-<button id="resetEvening">איפוס ערב</button>
+<div class="stat">
+<strong id="waitingCount">0</strong>
+בהמתנה
 </div>
-<div id="setupMsg" class="notice hidden"></div>
-</section>
-<section class="card hidden" id="gameArea">
-<h2>3. משחקים</h2>
-<div class="courts" id="courts"></div>
-<h2 style="margin-top:14px">ממתינים</h2>
-<div class="queue" id="queue"></div>
-<div class="row" style="margin-top:12px">
-<button class="primary" id="fillCourts">שבץ מגרשים פנויים</button>
 </div>
-</section>
-<section class="card hidden" id="statsArea">
-<h2>מאזן הערב</h2>
-<div id="stats"></div>
-</section>
-</main>
-<footer>הנתונים נשמרים במכשיר זה בלבד.</footer>
+</div>
+<div class="card">
+<h2>רשימת שחקנים</h2>
+<div class="controls">
+<input
+id="newPlayer"
+type="text"
+placeholder="שם שחקן חדש"
+autocomplete="off"
+>
+<button class="primary" onclick="addPlayer()">
+הוסף שחקן
+</button>
+</div>
+<div class="small">
+השמות נשמרים במכשיר. בכל מפגש פשוט מסמנים מי הגיע.
+</div>
+<div id="playerList"></div>
+</div>
+<div class="card">
+<h2>חלוקה למגרשים</h2>
+<div class="controls">
+<button class="success" onclick="makeRound()">
+צור סבב
+</button>
+<button class="secondary" onclick="clearRound()">
+נקה סבב
+</button>
+</div>
+<div id="round"></div>
+</div>
+</div>
 <script>
-(() => {
-const MAX=15;
-const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
-let state=load()||{
- courtCount:2,
- players:[],
- evening:false,
- queue:[],
- courts:[],
- serial:0
-};
-function save(){
- localStorage.setItem('ginaton_pickleball_v3',JSON.stringify(state));
+const PLAYERS_KEY = "pickleball_players_v3";
+const PRESENT_KEY = "pickleball_present_v3";
+let players = loadPlayers();
+let present = loadPresent();
+function loadPlayers(){
+  try{
+    return JSON.parse(localStorage.getItem(PLAYERS_KEY)) || [];
+  }catch(e){
+    return [];
+  }
 }
-function load(){
- try{
-  return JSON.parse(localStorage.getItem('ginaton_pickleball_v3'));
- }catch(e){
-  return null;
- }
+function loadPresent(){
+  try{
+    return JSON.parse(localStorage.getItem(PRESENT_KEY)) || {};
+  }catch(e){
+    return {};
+  }
 }
-function esc(s){
- return String(s).replace(/[&<>"']/g,m=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  '"':'&quot;',
-  "'":'&#39;'
- }[m]));
+function savePlayers(){
+  localStorage.setItem(
+    PLAYERS_KEY,
+    JSON.stringify(players)
+  );
 }
-function selected(){
- return state.players.filter(p=>p.selected);
+function savePresent(){
+  localStorage.setItem(
+    PRESENT_KEY,
+    JSON.stringify(present)
+  );
 }
-function byId(id){
- return state.players.find(p=>p.id===id);
-}
-function resetStats(){
- state.players.forEach(p=>Object.assign(p,{
-  wins:0,
-  losses:0,
-  games:0,
-  last:0
- }));
-}
-function ensureCourts(){
- state.courts=Array.from(
-  {length:state.courtCount},
-  (_,i)=>state.courts[i]||null
- );
-}
-function msg(t){
- let e=$('#setupMsg');
- e.textContent=t;
- e.classList.remove('hidden');
- setTimeout(()=>e.classList.add('hidden'),2200);
-}
-function render(){
- $$('#courtChoice button').forEach(b=>
-  b.classList.toggle('active',+b.dataset.n===state.courtCount)
- );
- $('#playerList').innerHTML=
- state.players.length
- ?state.players.map(p=>`
- <div class="player">
- <input type="checkbox"
- data-select="${p.id}"
- ${p.selected?'checked':''}
- ${state.evening?'disabled':''}>
- <span class="name">${esc(p.name)}</span>
- <button data-edit="${p.id}"
- ${state.evening?'disabled':''}>ערוך</button>
- <button class="danger"
- data-del="${p.id}"
- ${state.evening?'disabled':''}>×</button>
- </div>
- `).join('')
- :'<div class="tiny">עדיין לא נוספו שחקנים.</div>';
- $('#newPlayer').disabled=state.evening;
- $('#addPlayer').disabled=state.evening || state.players.length>=MAX;
- $('#startEvening').disabled=state.evening;
- $('#resetEvening').disabled=!state.evening;
- $('#gameArea').classList.toggle('hidden',!state.evening);
- $('#statsArea').classList.toggle('hidden',!state.evening);
- if(state.evening){
-  renderCourts();
-  renderQueue();
-  renderStats();
- }
- save();
-}
-function renderCourts(){
- ensureCourts();
- $('#courts').innerHTML=state.courts.map((g,i)=>{
-  if(!g)
-   return `<div class="court">
-   <b>מגרש ${i+1}</b>
-   <div class="tiny" style="margin-top:8px">פנוי</div>
-   </div>`;
-  let a=g.teamA.map(id=>byId(id)?.name||'?').join(' + ');
-  let b=g.teamB.map(id=>byId(id)?.name||'?').join(' + ');
-  return `<div class="court active">
-  <b>מגרש ${i+1}</b>
-  <div class="team"><b>קבוצה א׳:</b> ${esc(a)}</div>
-  <div class="team"><b>קבוצה ב׳:</b> ${esc(b)}</div>
-  <div class="row">
-  <button class="good" data-win="${i}:A">א׳ ניצחה</button>
-  <button class="good" data-win="${i}:B">ב׳ ניצחה</button>
-  <button data-cancel="${i}">בטל משחק</button>
-  </div>
-  </div>`;
- }).join('');
-}
-function renderQueue(){
- $('#queue').innerHTML=
- state.queue.length
- ?state.queue.map(id=>
- `<span class="pill">${esc(byId(id)?.name||'?')}</span>`
- ).join('')
- :'<span class="tiny">אין ממתינים.</span>';
-}
-function renderStats(){
- let ps=selected().slice().sort((a,b)=>
-  b.games-a.games ||
-  b.wins-a.wins ||
-  a.name.localeCompare(b.name,'he')
- );
- $('#stats').innerHTML=
- `<div class="stat head">
- <span>שחקן</span>
- <span>מש׳</span>
- <span>נצ׳</span>
- <span>הפ׳</span>
- <span>מאזן</span>
- </div>`+
- ps.map(p=>`
- <div class="stat">
- <span>${esc(p.name)}</span>
- <span>${p.games}</span>
- <span>${p.wins}</span>
- <span>${p.losses}</span>
- <span>${p.wins-p.losses>=0?'+':''}${p.wins-p.losses}</span>
- </div>`
- ).join('');
+function escapeHTML(text){
+  const div=document.createElement("div");
+  div.textContent=text;
+  return div.innerHTML;
 }
 function addPlayer(){
- let inp=$('#newPlayer');
- let name=inp.value.trim();
- if(!name)
-  return msg('יש להקליד שם.');
- if(state.players.length>=MAX)
-  return msg('הגעת למקסימום 15 שחקנים.');
- if(state.players.some(p=>
-  p.name.toLowerCase()===name.toLowerCase()
- ))
-  return msg('השם כבר קיים.');
- state.players.push({
-  id:Date.now()+Math.floor(Math.random()*999),
-  name,
-  selected:true,
-  wins:0,
-  losses:0,
-  games:0,
-  last:0
- });
- inp.value='';
- render();
- inp.focus();
-}
-function start(){
- let ps=selected();
- if(ps.length<4)
-  return msg('נדרשים לפחות 4 שחקנים.');
- resetStats();
- state.evening=true;
- state.serial=0;
- state.courts=Array(state.courtCount).fill(null);
- state.queue=ps.map(p=>p.id);
- fill();
- render();
-}
-function pickFour(){
- if(state.queue.length<4)
-  return null;
- return state.queue.splice(0,4);
-}
-function fill(){
- ensureCourts();
- for(let i=0;i<state.courts.length;i++){
-  if(state.courts[i])
-   continue;
-  let ids=pickFour();
-  if(!ids)
-   break;
-  let teams=(state.serial++%2===0)
-  ?[
-   [ids[0],ids[3]],
-   [ids[1],ids[2]]
-  ]
-  :[
-   [ids[0],ids[2]],
-   [ids[1],ids[3]]
-  ];
-  state.courts[i]={
-   teamA:teams[0],
-   teamB:teams[1]
-  };
- }
- render();
-}
-function finish(i,winner){
- let g=state.courts[i];
- if(!g)
-  return;
- let winners=winner==='A'?g.teamA:g.teamB;
- let losers=winner==='A'?g.teamB:g.teamA;
- [...winners,...losers].forEach(id=>{
-  let p=byId(id);
-  p.games++;
-  p.last=state.serial;
- });
- winners.forEach(id=>byId(id).wins++);
- losers.forEach(id=>byId(id).losses++);
- state.queue.push(...winners,...losers);
- state.courts[i]=null;
- fill();
-}
-function cancel(i){
- let g=state.courts[i];
- if(!g)
-  return;
- state.queue.unshift(...g.teamA,...g.teamB);
- state.courts[i]=null;
- render();
-}
-function resetEvening(){
- if(!confirm('לאפס את הערב ולחזור לבחירת השחקנים?'))
-  return;
- state.evening=false;
- state.queue=[];
- state.courts=[];
- resetStats();
- render();
-}
-$('#addPlayer').addEventListener('click',addPlayer);
-$('#newPlayer').addEventListener('keydown',e=>{
- if(e.key==='Enter')
-  addPlayer();
-});
-$('#startEvening').addEventListener('click',start);
-$('#resetEvening').addEventListener('click',resetEvening);
-$('#fillCourts').addEventListener('click',fill);
-$('#courtChoice').addEventListener('click',e=>{
- let b=e.target.closest('button[data-n]');
- if(!b || state.evening)
-  return;
- state.courtCount=+b.dataset.n;
- render();
-});
-$('#playerList').addEventListener('change',e=>{
- if(e.target.matches('[data-select]')){
-  let p=byId(+e.target.dataset.select);
-  if(p)
-   p.selected=e.target.checked;
-  render();
- }
-});
-$('#playerList').addEventListener('click',e=>{
- let eb=e.target.closest('[data-edit]');
- let db=e.target.closest('[data-del]');
- if(eb){
-  let p=byId(+eb.dataset.edit);
-  let n=prompt('שם השחקן:',p.name);
-  if(n && n.trim()){
-   p.name=n.trim();
-   render();
+  const input=document.getElementById("newPlayer");
+  const name=input.value.trim();
+  if(!name){
+    return;
   }
- }
- if(db){
-  state.players=state.players.filter(
-   p=>p.id!==+db.dataset.del
+  if(players.some(
+    p=>p.toLowerCase()===name.toLowerCase()
+  )){
+    alert("השם כבר נמצא ברשימה");
+    return;
+  }
+  players.push(name);
+  players.sort(
+    (a,b)=>a.localeCompare(b,"he")
   );
-  render();
- }
+  savePlayers();
+  input.value="";
+  renderPlayers();
+}
+document.getElementById("newPlayer")
+.addEventListener("keydown",function(e){
+  if(e.key==="Enter"){
+    addPlayer();
+  }
 });
-$('#courts').addEventListener('click',e=>{
- let wb=e.target.closest('[data-win]');
- let cb=e.target.closest('[data-cancel]');
- if(wb){
-  let [i,w]=wb.dataset.win.split(':');
-  finish(+i,w);
- }
- if(cb)
-  cancel(+cb.dataset.cancel);
-});
-ensureCourts();
-render();
-})();
+function deletePlayer(index){
+  const name=players[index];
+  if(!confirm("למחוק את "+name+" מהרשימה?")){
+    return;
+  }
+  delete present[name];
+  players.splice(index,1);
+  savePlayers();
+  savePresent();
+  renderPlayers();
+}
+function togglePresent(name,checked){
+  if(checked){
+    present[name]=true;
+  }else{
+    delete present[name];
+  }
+  savePresent();
+  updateStats();
+}
+function renderPlayers(){
+  const box=document.getElementById("playerList");
+  box.innerHTML="";
+  players.forEach((name,index)=>{
+    const row=document.createElement("div");
+    row.className="player";
+    const checked=present[name] ? "checked" : "";
+    row.innerHTML=`
+      <input
+        type="checkbox"
+        ${checked}
+        onchange="togglePresent(
+          decodeURIComponent('${encodeURIComponent(name)}'),
+          this.checked
+        )"
+      >
+      <label>${escapeHTML(name)}</label>
+      <button
+        class="delete"
+        onclick="deletePlayer(${index})"
+        title="מחיקה"
+      >
+        ×
+      </button>
+    `;
+    box.appendChild(row);
+  });
+  updateStats();
+}
+function updateStats(){
+  document.getElementById("totalPlayers")
+  .textContent=players.length;
+  const count=
+    players.filter(name=>present[name]).length;
+  document.getElementById("presentPlayers")
+  .textContent=count;
+}
+function getPresentPlayers(){
+  return players.filter(
+    name=>present[name]
+  );
+}
+function shuffle(array){
+  const a=[...array];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(
+      Math.random()*(i+1)
+    );
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function makeRound(){
+  const attending=getPresentPlayers();
+  if(attending.length<4){
+    alert("צריך לפחות 4 שחקנים מסומנים");
+    return;
+  }
+  const courts=
+    parseInt(
+      document.getElementById("courtCount").value
+    );
+  const shuffled=shuffle(attending);
+  const playingCount=
+    Math.min(
+      shuffled.length,
+      courts*4
+    );
+  const playing=
+    shuffled.slice(0,playingCount);
+  const waiting=
+    shuffled.slice(playingCount);
+  const box=
+    document.getElementById("round");
+  box.innerHTML="";
+  for(let c=0;c<courts;c++){
+    const group=
+      playing.slice(c*4,c*4+4);
+    if(group.length===0){
+      break;
+    }
+    const court=
+      document.createElement("div");
+    court.className="court";
+    let html=
+      `<div class="court-title">
+       מגרש ${c+1}
+       </div>`;
+    if(group.length===4){
+      html+=`
+      <div class="team">
+      זוג א׳:
+      ${escapeHTML(group[0])}
+      + ${escapeHTML(group[1])}
+      </div>
+      <div class="team">
+      זוג ב׳:
+      ${escapeHTML(group[2])}
+      + ${escapeHTML(group[3])}
+      </div>
+      `;
+    }else{
+      html+=`
+      <div class="team">
+      ${group.map(escapeHTML).join(" • ")}
+      </div>
+      `;
+    }
+    court.innerHTML=html;
+    box.appendChild(court);
+  }
+  if(waiting.length){
+    const wait=
+      document.createElement("div");
+    wait.className="waiting";
+    wait.innerHTML=
+      "<strong>ממתינים:</strong><br>"+
+      waiting.map(escapeHTML).join(" • ");
+    box.appendChild(wait);
+  }
+  document.getElementById("waitingCount")
+  .textContent=waiting.length;
+}
+function clearRound(){
+  document.getElementById("round")
+  .innerHTML="";
+  document.getElementById("waitingCount")
+  .textContent="0";
+}
+function newSession(){
+  if(!confirm(
+    "לפתוח מפגש חדש? רשימת השחקנים תישמר ורק סימוני הנוכחות יימחקו."
+  )){
+    return;
+  }
+  present={};
+  savePresent();
+  clearRound();
+  renderPlayers();
+}
+renderPlayers();
 </script>
 </body>
 </html>
+
+הקוד הזה לא מוגבל ל־15 שמות. תוכל להזין את כל כ־60 השחקנים פעם אחת; הם נשמרים בדפדפן, ובכל מפגש מסמנים רק את מי שהגיע.
+
+אחרי ההדבקה, אל תשנה שום דבר בקוד. לחץ Commit changes….
 
 אחרי שהדבקת את הכול, לחץ על הכפתור הירוק Commit changes….

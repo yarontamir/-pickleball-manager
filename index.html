@@ -1,0 +1,631 @@
+  <!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>מנהל פיקלבול גינתון</title>
+
+<style>
+
+body {
+
+  font-family: Arial, sans-serif;
+
+  background: #f4f6f8;
+
+  margin: 0;
+
+  padding: 15px;
+
+  color: #222;
+
+}
+
+.container {
+
+  max-width: 850px;
+
+  margin: auto;
+
+}
+
+h1 {
+
+  text-align: center;
+
+  color: #176b3a;
+
+  margin-bottom: 5px;
+
+}
+
+.subtitle {
+
+  text-align: center;
+
+  color: #666;
+
+  margin-bottom: 20px;
+
+}
+
+.card {
+
+  background: white;
+
+  padding: 18px;
+
+  margin-bottom: 16px;
+
+  border-radius: 14px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+
+}
+
+h2 {
+
+  margin-top: 0;
+
+}
+
+button {
+
+  border: none;
+
+  border-radius: 10px;
+
+  padding: 12px 16px;
+
+  margin: 4px;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+}
+
+.player {
+
+  background: #e8eef3;
+
+}
+
+.player.active {
+
+  background: #37a866;
+
+  color: white;
+
+}
+
+.primary {
+
+  background: #176b3a;
+
+  color: white;
+
+  font-weight: bold;
+
+}
+
+.secondary {
+
+  background: #e5e7eb;
+
+}
+
+.win {
+
+  background: #238636;
+
+  color: white;
+
+}
+
+.loss {
+
+  background: #c93c3c;
+
+  color: white;
+
+}
+
+.court {
+
+  background: #eef8f1;
+
+  border: 2px solid #72b78a;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  margin-top: 12px;
+
+}
+
+.teams {
+
+  display: flex;
+
+  gap: 12px;
+
+  align-items: stretch;
+
+}
+
+.team {
+
+  flex: 1;
+
+  background: white;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-size: 19px;
+
+}
+
+.vs {
+
+  display: flex;
+
+  align-items: center;
+
+  font-weight: bold;
+
+}
+
+.status {
+
+  font-size: 18px;
+
+  margin-bottom: 10px;
+
+}
+
+.small {
+
+  color: #666;
+
+  font-size: 14px;
+
+}
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+}
+
+th, td {
+
+  padding: 8px;
+
+  border-bottom: 1px solid #ddd;
+
+  text-align: center;
+
+}
+
+@media (max-width:600px) {
+
+  .teams {
+
+    flex-direction: column;
+
+  }
+
+  .vs {
+
+    justify-content: center;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🏓 פיקלבול גינתון</h1>
+
+<div class="subtitle">ניהול משחקים ותחלופת שחקנים</div>
+
+<div class="card">
+
+<h2>מי מוכן לשחק?</h2>
+
+<div id="players"></div>
+
+<p class="small">
+
+לחיצה על שם משנה את מצב השחקן בין "ממתין" ל"נח".
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>תור המתנה</h2>
+
+<div id="waiting" class="status"></div>
+
+<button class="primary" onclick="startGame()">
+
+התחל משחק
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>המגרש</h2>
+
+<div id="courtEmpty">
+
+כרגע אין משחק פעיל.
+
+</div>
+
+<div id="court" style="display:none">
+
+<div class="court">
+
+<div class="teams">
+
+<div class="team" id="teamA"></div>
+
+<div class="vs">נגד</div>
+
+<div class="team" id="teamB"></div>
+
+</div>
+
+<div style="text-align:center; margin-top:15px">
+
+<button class="win" onclick="finishGame('A')">
+
+קבוצה א׳ ניצחה
+
+</button>
+
+<button class="win" onclick="finishGame('B')">
+
+קבוצה ב׳ ניצחה
+
+</button>
+
+<button class="secondary" onclick="finishGame(null)">
+
+סיים ללא תוצאה
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>מאזן הערב</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>שחקן</th>
+
+<th>משחקים</th>
+
+<th>ניצחונות</th>
+
+<th>הפסדים</th>
+
+</tr>
+
+</thead>
+
+<tbody id="scoreTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const names = [
+
+  "יוסי",
+
+  "דני",
+
+  "רוני",
+
+  "אבי",
+
+  "משה",
+
+  "גדי",
+
+  "עמי",
+
+  "חיים",
+
+  "יעל",
+
+  "רותי",
+
+  "מיכל",
+
+  "נועה"
+
+];
+
+let players = names.map((name,index) => ({
+
+  name:name,
+
+  waiting:true,
+
+  order:index,
+
+  games:0,
+
+  wins:0,
+
+  losses:0
+
+}));
+
+let currentGame = null;
+
+let nextOrder = players.length;
+
+function render() {
+
+  const playerDiv = document.getElementById("players");
+
+  playerDiv.innerHTML = "";
+
+  players.forEach((p,index) => {
+
+    const b = document.createElement("button");
+
+    b.textContent = p.name;
+
+    b.className =
+
+      "player " + (p.waiting ? "active" : "");
+
+    b.onclick = () => togglePlayer(index);
+
+    playerDiv.appendChild(b);
+
+  });
+
+  const waitingPlayers = players
+
+    .filter(p => p.waiting)
+
+    .sort((a,b) => a.order-b.order);
+
+  document.getElementById("waiting").innerHTML =
+
+    waitingPlayers.length
+
+      ? waitingPlayers.map(p => p.name).join(" ← ")
+
+      : "אין כרגע שחקנים שממתינים.";
+
+  const table =
+
+    document.getElementById("scoreTable");
+
+  table.innerHTML = "";
+
+  players.forEach(p => {
+
+    table.innerHTML += `
+
+    <tr>
+
+      <td>${p.name}</td>
+
+      <td>${p.games}</td>
+
+      <td>${p.wins}</td>
+
+      <td>${p.losses}</td>
+
+    </tr>`;
+
+  });
+
+}
+
+function togglePlayer(index) {
+
+  const p = players[index];
+
+  if (
+
+    currentGame &&
+
+    currentGame.includes(p)
+
+  ) {
+
+    alert("השחקן נמצא כרגע במשחק.");
+
+    return;
+
+  }
+
+  p.waiting = !p.waiting;
+
+  if (p.waiting) {
+
+    p.order = nextOrder++;
+
+  }
+
+  render();
+
+}
+
+function startGame() {
+
+  if (currentGame) {
+
+    alert("יש כבר משחק פעיל.");
+
+    return;
+
+  }
+
+  const waiting = players
+
+    .filter(p => p.waiting)
+
+    .sort((a,b) => a.order-b.order);
+
+  if (waiting.length < 4) {
+
+    alert("צריך לפחות ארבעה שחקנים שמוכנים לשחק.");
+
+    return;
+
+  }
+
+  currentGame = waiting.slice(0,4);
+
+  currentGame.forEach(p => {
+
+    p.waiting = false;
+
+  });
+
+  document.getElementById("courtEmpty")
+
+    .style.display = "none";
+
+  document.getElementById("court")
+
+    .style.display = "block";
+
+  document.getElementById("teamA").innerHTML =
+
+    "<b>קבוצה א׳</b><br>" +
+
+    currentGame[0].name +
+
+    "<br>" +
+
+    currentGame[1].name;
+
+  document.getElementById("teamB").innerHTML =
+
+    "<b>קבוצה ב׳</b><br>" +
+
+    currentGame[2].name +
+
+    "<br>" +
+
+    currentGame[3].name;
+
+  render();
+
+}
+
+function finishGame(winner) {
+
+  if (!currentGame) return;
+
+  currentGame.forEach(p => {
+
+    p.games++;
+
+  });
+
+  if (winner === "A") {
+
+    currentGame[0].wins++;
+
+    currentGame[1].wins++;
+
+    currentGame[2].losses++;
+
+    currentGame[3].losses++;
+
+  }
+
+  if (winner === "B") {
+
+    currentGame[2].wins++;
+
+    currentGame[3].wins++;
+
+    currentGame[0].losses++;
+
+    currentGame[1].losses++;
+
+  }
+
+  /*
+
+  לאחר משחק השחקנים אינם נכנסים
+
+  אוטומטית לתור.
+
+  כל שחקן מחליט מתי הוא מוכן שוב.
+
+  */
+
+  currentGame = null;
+
+  document.getElementById("court")
+
+    .style.display = "none";
+
+  document.getElementById("courtEmpty")
+
+    .style.display = "block";
+
+  render();
+
+}
+
+render();
+
+</script>
+
+</body>
+
+</html>
